@@ -22,8 +22,18 @@ fname = config['epo']
 
 # Read the raw data and info
 evo = mne.read_evokeds(fname)
-info = evo.info
+# read info from each evoked list element
+info = [evo[i].info for i in range(len(evo))]
 
 #Save the info into a info.txt file
 with open(os.path.join('out_dir','info.txt'), 'w') as f:
     f.write(str(info))
+    
+# create a product.json file to show the output
+dict_json_product = {'brainlife': []}
+
+info = str(info)
+dict_json_product['brainlife'].append({'type': 'message', 'msg': info})
+
+with open('product.json', 'w') as outfile:
+    json.dump(dict_json_product, outfile)
